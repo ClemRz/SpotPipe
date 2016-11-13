@@ -1,7 +1,7 @@
 # SpotPipe
 Real time Piping tool for SPOT feeds
 
-Translates a SPOT feed into GeoJson format.
+Translates a [SPOT feed](https://faq.findmespot.com/index.php?action=showEntry&data=69) into [GeoJSON format](http://www.geojson.org/geojson-spec.html).
 
 ## Dependencies
 Dependencies are managed by Composer.
