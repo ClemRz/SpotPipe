@@ -22,9 +22,9 @@ GET parameters:
  http://your.domain.com/SpotPipe/index.php?feed=yourFeedKeyHere
  
 ## Usage example in QGIS
-How to: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
-
 ![Example](res/screenshot1.png)
+
+How to integrate a live feed in QGIS: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
 
 ## Todo
 Continuous Integration
