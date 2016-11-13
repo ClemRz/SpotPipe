@@ -24,8 +24,8 @@ try {
     $feed = $_GET['feed'];
     $password = $_GET['password'];
     $forLineString = !empty($_GET['linestring']);
-    $last50 = !empty($_GET['last50']);
-    $adapter = new SpotJsonAdapter($feed, $password, $forLineString, $last50);
+    $all = !empty($_GET['all']);
+    $adapter = new SpotJsonAdapter($feed, $password, $forLineString, $all);
     $jsonObject = $adapter->getGeoJsonFeatures();
 } catch (Exception $e) {
     $jsonObject = new stdClass();

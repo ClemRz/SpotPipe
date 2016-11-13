@@ -25,9 +25,9 @@ class SpotJsonAdapter
     private $_features = array();
     private $_lastMessagesCount;
     private $_url;
-    private $_last50;
+    private $_all;
 
-    public function __construct($feed, $password = '', $forLineString = false, $last50 = false)
+    public function __construct($feed, $password = '', $forLineString = false, $all = false)
     {
         if (empty($feed)) {
             throw new Exception('No feed provided.');
@@ -37,7 +37,7 @@ class SpotJsonAdapter
             $this->_url .= "?feedPassword={$password}";
         }
         $this->_forLineString = $forLineString;
-        $this->_last50 = $last50;
+        $this->_all = $all;
     }
 
     public function getGeoJsonFeatures()
@@ -60,7 +60,7 @@ class SpotJsonAdapter
             $this->_lastMessagesCount = $jsonObject->response->feedMessageResponse->count;
             $this->_features = array_merge($this->_features, $this->getFeatures($messages));
             $start += 50;
-        } while (!$this->_last50 && $this->hasMoreMessages());
+        } while ($this->_all && $this->hasMoreMessages());
     }
 
     private function getMessages($jsonObject)
