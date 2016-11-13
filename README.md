@@ -11,6 +11,9 @@ GET parameters:
  - linestring: Optional, set to 1 in order to return a lineString instead of Points
  - all: Optional, set tp 1 in order to return not only the last 50 messages but all of them
  
+ Example:
+ http://your.domain.com/SpotPipe/index.php?feed=yourFeedKeyHere
+ 
 ## Usage example in QGIS
 How to: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
 
