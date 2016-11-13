@@ -24,7 +24,8 @@ class SpotJsonAdapter
     private $_forLineString;
     private $_features = array();
     private $_lastMessagesCount;
-    private $_url;
+    private $_feed;
+    private $_password;
     private $_all;
 
     public function __construct($feed, $password = '', $forLineString = false, $all = false)
@@ -32,10 +33,8 @@ class SpotJsonAdapter
         if (empty($feed)) {
             throw new Exception('No feed provided.');
         }
-        $this->_url = "https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed/{$feed}/message.json";
-        if (!empty($password)) {
-            $this->_url .= "?feedPassword={$password}";
-        }
+        $this->_feed = $feed;
+        $this->_password = $password;
         $this->_forLineString = $forLineString;
         $this->_all = $all;
     }
@@ -43,7 +42,33 @@ class SpotJsonAdapter
     public function getGeoJsonFeatures()
     {
         $this->fetchGeoJsonFeatures();
-        return new GeoJson\Feature\FeatureCollection($this->_features);
+        if ($this->_forLineString) {
+            $lineString1 = new \GeoJson\Geometry\LineString($this->_features);
+            $feature = new \GeoJson\Feature\Feature($lineString1);
+            $featureCollection = array($feature);
+        } else {
+            $featureCollection = array();
+            $featureReflector = new ReflectionClass('\GeoJson\Feature\Feature');
+            foreach ($this->_features as $point) {
+                $point[0] = new \GeoJson\Geometry\Point($point[0]);
+                $feature = $featureReflector->newInstanceArgs($point);
+                array_push($featureCollection, $feature);
+            }
+        }
+        return new GeoJson\Feature\FeatureCollection($featureCollection);
+    }
+
+    private function getUrl($start, $latest = false)
+    {
+        $endpoint = $latest ? Spot::LATEST_ENDPOINT : Spot::MESSAGE_ENDPOINT;
+        $url = Spot::BASE_URL . "/{$this->_feed}/{$endpoint}?";
+        $parameters = array();
+        if (!empty($this->_password)) {
+            array_push($parameters, Spot::PASSWORD_PARAMETER . "={$this->_password}");
+        }
+        array_push($parameters, Spot::START_PARAMETER . "={$start}");
+        $url .= join('&', $parameters);
+        return $url;
     }
 
     private function hasMoreMessages()
@@ -51,6 +76,7 @@ class SpotJsonAdapter
         return $this->_lastMessagesCount === 50;
     }
 
+    //TODO clement do some caching before fetching the entire feed
     private function fetchGeoJsonFeatures()
     {
         $start = 0;
@@ -58,7 +84,13 @@ class SpotJsonAdapter
             $jsonObject = $this->getJsonObject($start);
             $messages = $this->getMessages($jsonObject);
             $this->_lastMessagesCount = $jsonObject->response->feedMessageResponse->count;
-            $this->_features = array_merge($this->_features, $this->getFeatures($messages));
+
+            if ($this->_forLineString) {
+                $features = $this->getLineString($messages);
+            } else {
+                $features = $this->getPoints($messages);
+            }
+            $this->_features = array_merge($this->_features, $features);
             $start += 50;
         } while ($this->_all && $this->hasMoreMessages());
     }
@@ -84,45 +116,30 @@ class SpotJsonAdapter
         return $message;
     }
 
-    private function getFeatures(array $messages)
+    private function getLineString(array $messages)
     {
-        if ($this->_forLineString) {
-            return $this->getLineStringFeatures($messages);
-        } else {
-            return $this->getPointFeatures($messages);
-        }
+        $points = $this->getPoints($messages);
+        array_walk($points, function (&$point) {
+            $point = $point[0];
+        });
+        return $points;
     }
 
-    private function getPointFeatures(array $messages)
+    private function getPoints(array $messages)
     {
-        $features = array();
+        $points = array();
         foreach ($messages as $index => $message) {
             $point = $this->getPoint($message);
             $properties = $this->getProperties($message, $index);
             $id = $message->id;
-            $feature = new \GeoJson\Feature\Feature($point, $properties, $id);
-            array_push($features, $feature);
+            array_push($points, array($point, $properties, $id));
         }
-        return $features;
+        return $points;
     }
 
-    private function getLineStringFeatures(array $messages)
+    private function getJsonObject($start = 0, $latest = false)
     {
-        $features = array();
-        $points = array();
-        foreach ($messages as $message) {
-            $point = $this->getPoint($message);
-            array_push($points, $point);
-        }
-        $lineString = new \GeoJson\Geometry\LineString($points);
-        $feature = new \GeoJson\Feature\Feature($lineString);
-        array_push($features, $feature);
-        return $features;
-    }
-
-    private function getJsonObject($start = 0)
-    {
-        $myCurl = new MyCurl($this->_url . '&start=' . $start);
+        $myCurl = new MyCurl($this->getUrl($start, $latest));
         $myCurl->createCurl();
         $jsonObject = json_decode($myCurl);
         return $jsonObject;
@@ -154,7 +171,16 @@ class SpotJsonAdapter
         if ($message->latitude === null || $message->longitude === null) {
             throw new Exception('Invalid coordinates.');
         }
-        $point = new \GeoJson\Geometry\Point([$message->longitude, $message->latitude]);
-        return $point;
+        //$point = new \GeoJson\Geometry\Point([$message->longitude, $message->latitude]);
+        return array($message->longitude, $message->latitude);
     }
+}
+
+class Spot
+{
+    const BASE_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed';
+    const LATEST_ENDPOINT = 'latest.json';
+    const MESSAGE_ENDPOINT = 'message.json';
+    const PASSWORD_PARAMETER = 'feedPassword';
+    const START_PARAMETER = 'start';
 }
