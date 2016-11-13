@@ -25,3 +25,6 @@ GET parameters:
 How to: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
 
 ![Example](res/screenshot1.png)
+
+## Todo
+Continuous Integration
