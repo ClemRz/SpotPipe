@@ -23,16 +23,9 @@ try {
     require __DIR__ . '/SpotJsonAdapter.php';
     $feed = $_GET['feed'];
     $password = $_GET['password'];
-    if (empty($feed)) {
-        throw new Exception('No feed provided.');
-    }
-    $url = "https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed/{$feed}/message.json";
-    if (!empty($password)) {
-        $url .= "?feedPassword={$password}";
-    }
-    $myCurl = new MyCurl($url);
-    $myCurl->createCurl();
-    $adapter = new SpotJsonAdapter($myCurl);
+    $forLineString = !empty($_GET['linestring']);
+    $last50 = !empty($_GET['last50']);
+    $adapter = new SpotJsonAdapter($feed, $password, $forLineString, $last50);
     $jsonObject = $adapter->getGeoJsonFeatures();
 } catch (Exception $e) {
     $jsonObject = new stdClass();
