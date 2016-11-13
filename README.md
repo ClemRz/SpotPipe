@@ -3,6 +3,13 @@ Real time Piping tool for SPOT feeds
 
 Translates a SPOT feed into GeoJson format.
 
+## Dependencies
+Dependencies are managed by Composer.
+To install dependencies run:
+```
+$ composer install
+```
+
 ## API
 GET parameters:
 
