@@ -12,4 +12,6 @@ GET parameters:
  - all: Optional, set tp 1 in order to return not only the last 50 messages but all of them
  
 ## Usage example in QGIS
-See [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
+How to: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
+
+![Example](http://screencast.com/t/6VWpEXlK3oym "Example")
