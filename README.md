@@ -14,4 +14,4 @@ GET parameters:
 ## Usage example in QGIS
 How to: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
 
-![Example](http://screencast.com/t/6VWpEXlK3oym "Example")
+![Example](res/screenshot1.png)
