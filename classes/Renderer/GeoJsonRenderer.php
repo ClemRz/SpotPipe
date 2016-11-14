@@ -21,6 +21,11 @@
 
 namespace Renderer;
 
+use GeoJson\Feature\Feature;
+use GeoJson\Feature\FeatureCollection;
+use GeoJson\Geometry\LineString;
+use GeoJson\Geometry\Point;
+
 class GeoJsonRenderer implements Renderer
 {
     private $_type = 'Point';
@@ -28,19 +33,19 @@ class GeoJsonRenderer implements Renderer
     public function render(array $features)
     {
         if ($this->_type === 'Linestring') {
-            $lineString = new \GeoJson\Geometry\LineString($features);
-            $feature = new \GeoJson\Feature\Feature($lineString);
+            $lineString = new LineString($features);
+            $feature = new Feature($lineString);
             $collection = array($feature);
         } else {
             $collection = array();
             $featureReflector = new \ReflectionClass('\GeoJson\Feature\Feature');
             foreach ($features as $point) {
-                $point[0] = new \GeoJson\Geometry\Point($point[0]);
+                $point[0] = new Point($point[0]);
                 $feature = $featureReflector->newInstanceArgs($point);
                 array_push($collection, $feature);
             }
         }
-        $jsonObject = new \GeoJson\Feature\FeatureCollection($collection);
+        $jsonObject = new FeatureCollection($collection);
         return $jsonObject;
     }
 

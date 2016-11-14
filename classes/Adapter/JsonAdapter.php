@@ -19,18 +19,20 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace JsonAdapter;
+namespace Adapter;
 
-use \Spot\SpotJsonAdapter;
-
-class JsonAdapterFactory
+interface JsonAdapter
 {
-    public static function getJsonAdapter($client)
-    {
-        $class = "\\{$client}\\{$client}JsonAdapter";
-        if (class_exists($class)) {
-            return new $class();
-        }
-        throw new \Exception("Unsupported client: {$client}.");
-    }
+    public function setFeed($feed);
+
+    public function setPassword($password);
+
+    public function setAll($all);
+
+    public function setType($type);
+
+    public function fetchFeatures();
+
+    public function getFeatures();
+
 }

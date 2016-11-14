@@ -19,20 +19,16 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace JsonAdapter;
+namespace Adapter;
 
-interface JsonAdapter
+class AdapterFactory
 {
-    public function setFeed($feed);
-
-    public function setPassword($password);
-
-    public function setAll($all);
-
-    public function setType($type);
-
-    public function fetchFeatures();
-
-    public function getFeatures();
-
+    public static function getAdapter($client, $type)
+    {
+        $class = "\\{$client}\\{$client}{$type}Adapter"; //TODO clement crete folders
+        if (class_exists($class)) {
+            return new $class();
+        }
+        throw new \Exception("Unsupported client or type: {$client}, {$type}.");
+    }
 }

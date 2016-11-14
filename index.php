@@ -17,29 +17,10 @@
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @param $forLineString
- * @param $features
- * @return \GeoJson\Feature\FeatureCollection
- */
-function render($forLineString, $features)
-{
-    if ($forLineString) {
-        $lineString = new \GeoJson\Geometry\LineString($features);
-        $feature = new \GeoJson\Feature\Feature($lineString);
-        $collection = array($feature);
-    } else {
-        $collection = array();
-        $featureReflector = new ReflectionClass('\GeoJson\Feature\Feature');
-        foreach ($features as $point) {
-            $point[0] = new \GeoJson\Geometry\Point($point[0]);
-            $feature = $featureReflector->newInstanceArgs($point);
-            array_push($collection, $feature);
-        }
-    }
-    $jsonObject = new \GeoJson\Feature\FeatureCollection($collection);
-    return $jsonObject;
-}
+
+use \Adapter\AdapterFactory;
+use \Renderer\RendererFactory;
+
 
 try {
     require __DIR__ . '/vendor/autoload.php';
@@ -47,20 +28,24 @@ try {
         $class = str_replace('\\', '/', $class);
         include "./classes/{$class}.php";
     });
+
     $feed = $_GET['feed'];
     $password = $_GET['password'];
     $forLineString = !empty($_GET['linestring']);
     $all = !empty($_GET['all']);
-    $jsonAdapter = \JsonAdapter\JsonAdapterFactory::getJsonAdapter('Spot');
-    $jsonAdapter->setFeed($feed)
+
+    $adapter = AdapterFactory::getAdapter('Spot', 'Json');
+    $adapter->setFeed($feed)
         ->setPassword($password)
         ->setAll($all)
         ->setType($forLineString ? 'Linestring' : 'Point')
         ->fetchFeatures();
-    $features = $jsonAdapter->getFeatures();
-    $geoJsonRenderer = \Renderer\RendererFactory::getRenderer('GeoJson');
-    $geoJsonRenderer->setType($forLineString ? 'Linestring' : 'Point');
-    $jsonObject = $geoJsonRenderer->render($features);
+    $features = $adapter->getFeatures();
+
+    $renderer = RendererFactory::getRenderer('GeoJson');
+    $renderer->setType($forLineString ? 'Linestring' : 'Point');
+    $jsonObject = $renderer->render($features);
+
 } catch (Exception $e) {
     $jsonObject = new stdClass();
     $jsonObject->error = $e->getMessage();

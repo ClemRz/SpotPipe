@@ -24,7 +24,7 @@ namespace Spot\FeatureFetcher;
 class FeatureFetcherFactory
 {
     public static function getFetcher($type) {
-        $class = "\\Spot\FeatureFetcher\\{$type}FeatureFetcher";
+        $class = "\\Spot\\FeatureFetcher\\{$type}FeatureFetcher";  //TODO clement create folder
         if(class_exists($class)) {
             return new $class();
         }

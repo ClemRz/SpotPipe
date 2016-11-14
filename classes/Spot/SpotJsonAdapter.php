@@ -23,9 +23,8 @@ namespace Spot;
 
 use Spot\FeatureFetcher\FeatureFetcherFactory;
 use Spot\FeatureFetcher\FeatureFetcher;
-use JsonAdapter\JsonAdapter;
 
-class SpotJsonAdapter implements JsonAdapter
+class SpotJsonAdapter implements \Adapter\JsonAdapter
 {
     private $_features = array();
     private $_lastMessagesCount;
