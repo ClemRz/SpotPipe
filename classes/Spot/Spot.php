@@ -19,14 +19,13 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class JsonAdapterFactory
+namespace Spot;
+
+class Spot
 {
-    public static function getJsonAdapter($client)
-    {
-        $class = "{$client}JsonAdapter";
-        if (class_exists($class)) {
-            return new $class();
-        }
-        throw new Exception('Unsupported client.');
-    }
+    const BASE_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed';
+    const LATEST_ENDPOINT = 'latest.json';
+    const MESSAGE_ENDPOINT = 'message.json';
+    const PASSWORD_PARAMETER = 'feedPassword';
+    const START_PARAMETER = 'start';
 }

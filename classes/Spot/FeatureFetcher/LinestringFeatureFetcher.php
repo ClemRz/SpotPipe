@@ -19,20 +19,19 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface JsonAdapter
+namespace Spot\FeatureFetcher;
+
+class LinestringFeatureFetcher implements FeatureFetcher
 {
-    public function setFeed($feed);
 
-    public function setPassword($password);
-
-    public function setAsLineString($asLineString);
-
-    public function setAll($all);
-
-    public function asLineString();
-
-    public function fetchFeatures();
-
-    public function getFeatures();
+    public function fetchFeature(array $messages)
+    {
+        $points = array();
+        foreach ($messages as $index => $message) {
+            $point = SpotFeatureHelper::getPoint($message);
+            array_push($points, $point);
+        }
+        return $points;
+    }
 
 }

@@ -19,25 +19,22 @@
  */
 try {
     require __DIR__ . '/vendor/autoload.php';
-    /*spl_autoload_register(function ($class) {
-        include "classes/{$class}.php";
-    });*/
-    require __DIR__ . '/MyCurl.php';
-    require __DIR__ . '/JsonAdapter.php';
-    require __DIR__ . '/JsonAdapterFactory.php';
-    require __DIR__ . '/SpotJsonAdapter.php';
+    spl_autoload_register(function ($class) {
+        $class = str_replace('\\', '/', $class);
+        include "./classes/{$class}.php";
+    });
     $feed = $_GET['feed'];
     $password = $_GET['password'];
     $forLineString = !empty($_GET['linestring']);
     $all = !empty($_GET['all']);
-    $jsonAdapter = JsonAdapterFactory::getJsonAdapter('Spot');
+    $jsonAdapter = \JsonAdapter\JsonAdapterFactory::getJsonAdapter('Spot');
     $jsonAdapter->setFeed($feed)
         ->setPassword($password)
-        ->setAsLineString($forLineString)
         ->setAll($all)
+        ->setType($forLineString ? 'Linestring' : 'Point')
         ->fetchFeatures();
     $features = $jsonAdapter->getFeatures();
-    if ($jsonAdapter->asLineString()) {
+    if ($forLineString) {
         $lineString = new \GeoJson\Geometry\LineString($features);
         $feature = new \GeoJson\Feature\Feature($lineString);
         $collection = array($feature);
@@ -50,7 +47,7 @@ try {
             array_push($collection, $feature);
         }
     }
-    $jsonObject = new GeoJson\Feature\FeatureCollection($collection);
+    $jsonObject = new \GeoJson\Feature\FeatureCollection($collection);
 } catch (Exception $e) {
     $jsonObject = new stdClass();
     $jsonObject->error = $e->getMessage();
