@@ -27,8 +27,11 @@ When using client *spot*:
  Example:
  http://your.domain.com/SpotPipe/index.php?client=spot&from=json&to=geojson&feature=linestring&feed=yourFeedKeyHere&password=feedsPassword
  
-## Usage example in QGIS
-![Example](res/screenshot1.png)
+## Usage example in Google Earth:
+![Goog Earth Example](res/screenshot_earth.png)
+
+## Usage example in QGIS:
+![QGIS Example](res/screenshot_qgis.png)
 
 How to integrate a live feed in QGIS: [http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/](http://www.fulcrumapp.com/blog/live-data-visualization-in-qgis/)
 
