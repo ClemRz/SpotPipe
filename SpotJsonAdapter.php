@@ -19,43 +19,70 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SpotJsonAdapter
+class SpotJsonAdapter implements JsonAdapter
 {
-    private $_forLineString;
+    private $_asLineString = false;
     private $_features = array();
     private $_lastMessagesCount;
     private $_feed;
-    private $_password;
-    private $_all;
+    private $_password = '';
+    private $_all = false;
 
-    public function __construct($feed, $password = '', $forLineString = false, $all = false)
+    public function setFeed($feed)
     {
-        if (empty($feed)) {
-            throw new Exception('No feed provided.');
-        }
         $this->_feed = $feed;
-        $this->_password = $password;
-        $this->_forLineString = $forLineString;
-        $this->_all = $all;
+        return $this;
     }
 
-    public function getGeoJsonFeatures()
+    public function setPassword($password)
     {
-        $this->fetchGeoJsonFeatures();
-        if ($this->_forLineString) {
-            $lineString1 = new \GeoJson\Geometry\LineString($this->_features);
-            $feature = new \GeoJson\Feature\Feature($lineString1);
-            $featureCollection = array($feature);
-        } else {
-            $featureCollection = array();
-            $featureReflector = new ReflectionClass('\GeoJson\Feature\Feature');
-            foreach ($this->_features as $point) {
-                $point[0] = new \GeoJson\Geometry\Point($point[0]);
-                $feature = $featureReflector->newInstanceArgs($point);
-                array_push($featureCollection, $feature);
-            }
+
+        $this->_password = $password;
+        return $this;
+    }
+
+    public function setAsLineString($asLineString)
+    {
+        $this->_asLineString = $asLineString;
+        return $this;
+    }
+
+    public function setAll($all)
+    {
+        $this->_all = $all;
+        return $this;
+    }
+
+    public function getFeatures()
+    {
+        return $this->_features;
+    }
+
+    public function asLineString()
+    {
+        return $this->_asLineString;
+    }
+
+    //TODO clement do some caching before fetching the entire feed
+    public function fetchFeatures()
+    {
+        if (empty($this->_feed)) {
+            throw new Exception('No feed provided.');
         }
-        return new GeoJson\Feature\FeatureCollection($featureCollection);
+        $start = 0;
+        do {
+            $jsonObject = $this->getJsonObject($start);
+            $messages = $this->getMessages($jsonObject);
+            $this->_lastMessagesCount = $jsonObject->response->feedMessageResponse->count;
+
+            if ($this->_asLineString) {
+                $features = $this->getLineString($messages);
+            } else {
+                $features = $this->getPoints($messages);
+            }
+            $this->_features = array_merge($this->_features, $features);
+            $start += 50;
+        } while ($this->_all && $this->hasMoreMessages());
     }
 
     private function getUrl($start, $latest = false)
@@ -74,25 +101,6 @@ class SpotJsonAdapter
     private function hasMoreMessages()
     {
         return $this->_lastMessagesCount === 50;
-    }
-
-    //TODO clement do some caching before fetching the entire feed
-    private function fetchGeoJsonFeatures()
-    {
-        $start = 0;
-        do {
-            $jsonObject = $this->getJsonObject($start);
-            $messages = $this->getMessages($jsonObject);
-            $this->_lastMessagesCount = $jsonObject->response->feedMessageResponse->count;
-
-            if ($this->_forLineString) {
-                $features = $this->getLineString($messages);
-            } else {
-                $features = $this->getPoints($messages);
-            }
-            $this->_features = array_merge($this->_features, $features);
-            $start += 50;
-        } while ($this->_all && $this->hasMoreMessages());
     }
 
     private function getMessages($jsonObject)
