@@ -19,6 +19,7 @@ GET parameters:
  - `feature`: *optional*, feature type, can be one of [*point*, *linestring*], default *point*
  
 When using client *spot*:
+
  - `feed`: *required*, feed id of a Shared Page (see [http://www.findmespot.com/en/index.php?cid=111](http://www.findmespot.com/en/index.php?cid=111))
  - `password`: *optional*, if the feed is private then omitting this parameter will return an error
  - `all`: *optional*, set to 1 in order to return not only the last 50 messages but all of them
