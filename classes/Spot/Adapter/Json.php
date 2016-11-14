@@ -19,12 +19,14 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot;
+namespace Spot\Adapter;
 
-use Spot\FeatureFetcher\FeatureFetcherFactory;
-use Spot\FeatureFetcher\FeatureFetcher;
+use Adapter\JsonAdapter;
+use Spot\Fetcher\Fetcher;
+use Spot\Fetcher\FetcherFactory;
+use Spot\Spot;
 
-class SpotJsonAdapter implements \Adapter\JsonAdapter
+class Json implements JsonAdapter
 {
     private $_features = array();
     private $_lastMessagesCount;
@@ -69,7 +71,7 @@ class SpotJsonAdapter implements \Adapter\JsonAdapter
         if (empty($this->_feed)) {
             throw new \Exception('No feed provided.');
         }
-        $fetcher = FeatureFetcherFactory::getFetcher($this->_type);
+        $fetcher = FetcherFactory::getFetcher($this->_type);
         $start = 0;
         do {
             $jsonObject = $this->getJsonObject($start);
@@ -81,7 +83,8 @@ class SpotJsonAdapter implements \Adapter\JsonAdapter
         } while ($this->_all && $this->hasMoreMessages());
     }
 
-    private function fetchFeature(FeatureFetcher $fetcher, array $message) {
+    private function fetchFeature(Fetcher $fetcher, array $message)
+    {
         return $fetcher->fetchFeature($message);
     }
 

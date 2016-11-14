@@ -19,14 +19,15 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Renderer\Type;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\Point;
+use Renderer\Renderer;
 
-class GeoJsonRenderer implements Renderer
+class GeoJson implements Renderer
 {
     private $_type = 'Point';
 

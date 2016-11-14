@@ -19,19 +19,15 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\FeatureFetcher;
+namespace Spot\Fetcher;
 
-class LinestringFeatureFetcher implements FeatureFetcher
+class FetcherFactory
 {
-
-    public function fetchFeature(array $messages)
-    {
-        $points = array();
-        foreach ($messages as $index => $message) {
-            $point = SpotFeatureHelper::getPoint($message);
-            array_push($points, $point);
+    public static function getFetcher($feature) {
+        $class = "\\Spot\\Fetcher\\Feature\\{$feature}";
+        if(class_exists($class)) {
+            return new $class();
         }
-        return $points;
+        throw new \Exception("Unsupported feature: {$feature}.");
     }
-
 }

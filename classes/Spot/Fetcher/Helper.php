@@ -19,9 +19,9 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\FeatureFetcher;
+namespace Spot\Fetcher;
 
-class SpotFeatureHelper
+class Helper
 {
     public static function getProperties($message, $index)
     {

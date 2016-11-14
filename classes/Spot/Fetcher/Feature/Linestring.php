@@ -19,9 +19,22 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\FeatureFetcher;
+namespace Spot\Fetcher\Feature;
 
-interface FeatureFetcher
+use Spot\Fetcher\Fetcher;
+use Spot\Fetcher\Helper;
+
+class Linestring implements Fetcher
 {
-    public function fetchFeature(array $message);
+
+    public function fetchFeature(array $messages)
+    {
+        $points = array();
+        foreach ($messages as $index => $message) {
+            $point = Helper::getPoint($message);
+            array_push($points, $point);
+        }
+        return $points;
+    }
+
 }

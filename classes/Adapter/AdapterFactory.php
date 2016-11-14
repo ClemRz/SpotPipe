@@ -25,7 +25,7 @@ class AdapterFactory
 {
     public static function getAdapter($client, $type)
     {
-        $class = "\\{$client}\\{$client}{$type}Adapter"; //TODO clement crete folders
+        $class = "\\{$client}\\Adapter\\{$type}";
         if (class_exists($class)) {
             return new $class();
         }

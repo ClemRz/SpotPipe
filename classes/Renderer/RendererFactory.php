@@ -24,7 +24,7 @@ namespace Renderer;
 class RendererFactory
 {
     public static function getRenderer($type) {
-        $class = "\\Renderer\\{$type}Renderer";  //TODO clement create folder
+        $class = "\\Renderer\\Type\\{$type}";
         if(class_exists($class)) {
             return new $class();
         }

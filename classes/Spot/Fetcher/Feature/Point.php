@@ -19,15 +19,22 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\FeatureFetcher;
+namespace Spot\Fetcher\Feature;
 
-class FeatureFetcherFactory
+use Spot\Fetcher\Fetcher;
+use Spot\Fetcher\Helper;
+
+class Point implements Fetcher
 {
-    public static function getFetcher($type) {
-        $class = "\\Spot\\FeatureFetcher\\{$type}FeatureFetcher";  //TODO clement create folder
-        if(class_exists($class)) {
-            return new $class();
+    public function fetchFeature(array $messages)
+    {
+        $points = array();
+        foreach ($messages as $index => $message) {
+            $point = Helper::getPoint($message);
+            $properties = Helper::getProperties($message, $index);
+            $id = $message->id;
+            array_push($points, array($point, $properties, $id));
         }
-        throw new \Exception("Unsupported type: {$type}.");
+        return $points;
     }
 }
