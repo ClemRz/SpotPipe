@@ -19,7 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\Fetcher;
+namespace Client\Spot\Fetcher;
 
 class Helper
 {

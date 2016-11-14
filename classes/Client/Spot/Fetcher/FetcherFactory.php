@@ -19,12 +19,12 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\Fetcher;
+namespace Client\Spot\Fetcher;
 
 class FetcherFactory
 {
     public static function getFetcher($feature) {
-        $class = "\\Spot\\Fetcher\\Feature\\{$feature}";
+        $class = "\\Client\\Spot\\Fetcher\\Feature\\{$feature}";
         if(class_exists($class)) {
             return new $class();
         }

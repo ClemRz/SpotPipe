@@ -19,22 +19,9 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\Fetcher\Feature;
+namespace Client\Spot\Fetcher;
 
-use Spot\Fetcher\Fetcher;
-use Spot\Fetcher\Helper;
-
-class Point implements Fetcher
+interface Fetcher
 {
-    public function fetchFeature(array $messages)
-    {
-        $points = array();
-        foreach ($messages as $index => $message) {
-            $point = Helper::getPoint($message);
-            $properties = Helper::getProperties($message, $index);
-            $id = $message->id;
-            array_push($points, array($point, $properties, $id));
-        }
-        return $points;
-    }
+    public function fetchFeature(array $message);
 }

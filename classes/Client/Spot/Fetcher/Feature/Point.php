@@ -19,13 +19,22 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot;
+namespace Client\Spot\Fetcher\Feature;
 
-class Spot
+use Client\Spot\Fetcher\Fetcher;
+use Client\Spot\Fetcher\Helper;
+
+class Point implements Fetcher
 {
-    const BASE_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed';
-    const LATEST_ENDPOINT = 'latest.json';
-    const MESSAGE_ENDPOINT = 'message.json';
-    const PASSWORD_PARAMETER = 'feedPassword';
-    const START_PARAMETER = 'start';
+    public function fetchFeature(array $messages)
+    {
+        $points = array();
+        foreach ($messages as $index => $message) {
+            $point = Helper::getPoint($message);
+            $properties = Helper::getProperties($message, $index);
+            $id = $message->id;
+            array_push($points, array($point, $properties, $id));
+        }
+        return $points;
+    }
 }

@@ -19,12 +19,12 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spot\Adapter;
+namespace Client\Spot\Type;
 
 use Adapter\JsonAdapter;
-use Spot\Fetcher\Fetcher;
-use Spot\Fetcher\FetcherFactory;
-use Spot\Spot;
+use Client\Spot\Fetcher\Fetcher;
+use Client\Spot\Fetcher\FetcherFactory;
+use Client\Spot\Spot;
 
 class Json implements JsonAdapter
 {

@@ -25,7 +25,7 @@ class AdapterFactory
 {
     public static function getAdapter($client, $type)
     {
-        $class = "\\{$client}\\Adapter\\{$type}";
+        $class = "\\Client\\{$client}\\Type\\{$type}";
         if (class_exists($class)) {
             return new $class();
         }
