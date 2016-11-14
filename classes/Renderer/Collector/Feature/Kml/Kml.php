@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,13 +18,13 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Adapter;
+namespace Renderer\Collector\Feature\Kml;
 
-interface JsonAdapter
+use Renderer\Collector\Collector;
+
+interface Kml extends Collector
 {
+    public function setDom($dom);
 
-    public function setFeatureType($type);
-
-    public function getFeatures();
-
+    public function setDocumentNode($docNode);
 }

@@ -23,6 +23,7 @@ use Renderer\RendererFactory;
 use Exception\ExceptionFactory;
 
 try {
+
     require __DIR__ . '/vendor/autoload.php';
     spl_autoload_register(function ($class) {
         $class = str_replace('\\', '/', $class);
@@ -49,16 +50,20 @@ try {
     $adapter = AdapterFactory::getAdapter($client, $sourceFormat);
     $adapter->setFeatureType($featureType);
     $features = $adapter->getFeatures();
+    $fileName = $adapter->getFileName();
 
     $renderer = RendererFactory::getRenderer($targetFormat);
     $renderer->setFeatureType($featureType);
     $string = $renderer->render($features);
     $header = $renderer->getHeader();
+    $fileExtension = $renderer->getFileExtension();
 
     header($header);
+    header("Content-Disposition: filename=\"{$fileName}.{$fileExtension}\"");
     echo($string);
 
 } catch (Exception $e) {
+
     $targetFormat = ucfirst($_GET['to']);
     if (empty($targetFormat)) {
         $targetFormat = 'text';
@@ -69,5 +74,6 @@ try {
 
     header($header);
     echo($string);
+
 }
 

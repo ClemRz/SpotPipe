@@ -27,11 +27,11 @@ use Renderer\Renderer;
 
 class Geojson implements Renderer
 {
-    private $_featureType = 'Point';
+    private $_featureType;
 
     public function render(array $features)
     {
-        $collector = CollectorFactory::getCollector($this->_featureType);
+        $collector = CollectorFactory::getCollector('Geojson', $this->_featureType);
         $collection = $collector->collect($features);
         $jsonObject = new FeatureCollection($collection);
         return json_encode($jsonObject);
@@ -45,5 +45,10 @@ class Geojson implements Renderer
     public function getHeader()
     {
         return 'Content-Type: application/json; charset=utf-8';
+    }
+
+    public function getFileExtension()
+    {
+        return 'json';
     }
 }

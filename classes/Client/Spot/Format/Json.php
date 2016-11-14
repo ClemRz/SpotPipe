@@ -21,12 +21,12 @@
 
 namespace Client\Spot\Format;
 
-use Adapter\JsonAdapter;
+use Adapter\Format;
 use Client\Spot\Fetcher\Fetcher;
 use Client\Spot\Fetcher\FetcherFactory;
 use Client\Spot\Spot;
 
-class Json implements JsonAdapter
+class Json implements Format\Json
 {
     private $_features = array();
     private $_lastMessagesCount;
@@ -34,6 +34,7 @@ class Json implements JsonAdapter
     private $_featureType = 'Point';
     private $_password = '';
     private $_all = false;
+    private $_name;
 
     function __construct()
     {
@@ -58,13 +59,20 @@ class Json implements JsonAdapter
         $start = 0;
         do {
             $jsonObject = $this->getJsonObject($start);
+            $feedMessageResponse = $jsonObject->response->feedMessageResponse;
+            $this->_lastMessagesCount = $feedMessageResponse->count;
+            $this->_name = $feedMessageResponse->feed->name;
             $messages = $this->getMessages($jsonObject);
-            $this->_lastMessagesCount = $jsonObject->response->feedMessageResponse->count;
             $features = $this->fetchFeature($fetcher, $messages);
             $this->_features = array_merge($this->_features, $features);
             $start += 50;
         } while ($this->_all && $this->hasMoreMessages());
         return $this->_features;
+    }
+
+    public function getFileName()
+    {
+        return "{$this->_name} - {$this->_featureType}";
     }
 
     private function fetchFeature(Fetcher $fetcher, array $message)

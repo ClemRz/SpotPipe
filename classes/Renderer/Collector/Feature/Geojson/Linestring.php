@@ -18,23 +18,19 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer\Collector\Feature;
+namespace Renderer\Collector\Feature\Geojson;
 
+use GeoJson\Feature\Feature;
 use GeoJson\Geometry;
 use Renderer\Collector\Collector;
 
-class Point implements Collector
+class Linestring implements Collector
 {
 
     public function collect($features)
     {
-        $collection = array();
-        $featureReflector = new \ReflectionClass('\GeoJson\Feature\Feature');
-        foreach ($features as $point) {
-            $point[0] = new Geometry\Point($point[0]);
-            $feature = $featureReflector->newInstanceArgs($point);
-            array_push($collection, $feature);
-        }
-        return $collection;
+        $lineString = new Geometry\LineString($features);
+        $feature = new Feature($lineString);
+        return array($feature);
     }
 }

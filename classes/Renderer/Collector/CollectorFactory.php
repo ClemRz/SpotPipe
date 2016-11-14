@@ -23,11 +23,11 @@ namespace Renderer\Collector;
 
 class CollectorFactory
 {
-    public static function getCollector($feature) {
-        $class = "\\Renderer\\Collector\\Feature\\{$feature}";
+    public static function getCollector($format, $feature) {
+        $class = "\\Renderer\\Collector\\Feature\\{$format}\\{$feature}";
         if(class_exists($class)) {
             return new $class();
         }
-        throw new \Exception("Unsupported feature: {$feature}.");
+        throw new \Exception("Unsupported feature or format: {$feature}, {$format}.");
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,15 +18,23 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Renderer\Collector\Feature\Geojson;
 
-interface Renderer
+use GeoJson\Geometry;
+use Renderer\Collector\Collector;
+
+class Point implements Collector
 {
-    public function render(array $features);
 
-    public function setFeatureType($featureFeatureType);
-
-    public function getHeader();
-
-    public function getFileExtension();
+    public function collect($features)
+    {
+        $collection = array();
+        $featureReflector = new \ReflectionClass('\GeoJson\Feature\Feature');
+        foreach ($features as $point) {
+            $point[0] = new Geometry\Point($point[0]);
+            $feature = $featureReflector->newInstanceArgs($point);
+            array_push($collection, $feature);
+        }
+        return $collection;
+    }
 }

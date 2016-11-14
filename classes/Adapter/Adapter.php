@@ -18,19 +18,12 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer\Collector\Feature;
+namespace Adapter;
 
-use GeoJson\Feature\Feature;
-use GeoJson\Geometry;
-use Renderer\Collector\Collector;
 
-class Linestring implements Collector
+interface Adapter
 {
 
-    public function collect($features)
-    {
-        $lineString = new Geometry\LineString($features);
-        $feature = new Feature($lineString);
-        return array($feature);
-    }
+    public function getFileName();
+
 }

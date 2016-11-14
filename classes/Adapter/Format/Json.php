@@ -19,15 +19,15 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Adapter\Format;
 
-interface Renderer
+use Adapter\Adapter;
+
+interface Json extends Adapter
 {
-    public function render(array $features);
 
-    public function setFeatureType($featureFeatureType);
+    public function setFeatureType($type);
 
-    public function getHeader();
+    public function getFeatures();
 
-    public function getFileExtension();
 }
