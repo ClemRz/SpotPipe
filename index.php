@@ -17,6 +17,30 @@
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+/**
+ * @param $forLineString
+ * @param $features
+ * @return \GeoJson\Feature\FeatureCollection
+ */
+function render($forLineString, $features)
+{
+    if ($forLineString) {
+        $lineString = new \GeoJson\Geometry\LineString($features);
+        $feature = new \GeoJson\Feature\Feature($lineString);
+        $collection = array($feature);
+    } else {
+        $collection = array();
+        $featureReflector = new ReflectionClass('\GeoJson\Feature\Feature');
+        foreach ($features as $point) {
+            $point[0] = new \GeoJson\Geometry\Point($point[0]);
+            $feature = $featureReflector->newInstanceArgs($point);
+            array_push($collection, $feature);
+        }
+    }
+    $jsonObject = new \GeoJson\Feature\FeatureCollection($collection);
+    return $jsonObject;
+}
+
 try {
     require __DIR__ . '/vendor/autoload.php';
     spl_autoload_register(function ($class) {
@@ -34,20 +58,9 @@ try {
         ->setType($forLineString ? 'Linestring' : 'Point')
         ->fetchFeatures();
     $features = $jsonAdapter->getFeatures();
-    if ($forLineString) {
-        $lineString = new \GeoJson\Geometry\LineString($features);
-        $feature = new \GeoJson\Feature\Feature($lineString);
-        $collection = array($feature);
-    } else {
-        $collection = array();
-        $featureReflector = new ReflectionClass('\GeoJson\Feature\Feature');
-        foreach ($features as $point) {
-            $point[0] = new \GeoJson\Geometry\Point($point[0]);
-            $feature = $featureReflector->newInstanceArgs($point);
-            array_push($collection, $feature);
-        }
-    }
-    $jsonObject = new \GeoJson\Feature\FeatureCollection($collection);
+    $geoJsonRenderer = \Renderer\RendererFactory::getRenderer('GeoJson');
+    $geoJsonRenderer->setType($forLineString ? 'Linestring' : 'Point');
+    $jsonObject = $geoJsonRenderer->render($features);
 } catch (Exception $e) {
     $jsonObject = new stdClass();
     $jsonObject->error = $e->getMessage();
