@@ -37,6 +37,10 @@ class Point implements Kml
             $placeNode->appendChild($descNode);
             $styleUrl = $this->_dom->createElement('styleUrl', '#markerStyle');
             $placeNode->appendChild($styleUrl);
+            $tsNode = $this->_dom->createElement('TimeStamp');
+            $whenNode = $this->_dom->createElement('when', $this->getXmlFormattedDateString($point));
+            $tsNode->appendChild($whenNode);
+            $placeNode->appendChild($tsNode);
             $pointNode = $this->_dom->createElement('Point');
             $coordinatesNode = $this->_dom->createElement('coordinates', join(",", $point[0]));
             $pointNode->appendChild($coordinatesNode);
@@ -52,5 +56,10 @@ class Point implements Kml
     public function setDocumentNode($docNode)
     {
         $this->_documentNode = $docNode;
+    }
+
+    private function getXmlFormattedDateString($point)
+    {
+        return preg_replace('/\+([\d]{2})([\d]{2})/', '+$1:$2', $point[1]['dateTime']);
     }
 }
