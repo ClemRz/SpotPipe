@@ -19,7 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer\Type;
+namespace Renderer\Format;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
@@ -27,13 +27,13 @@ use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\Point;
 use Renderer\Renderer;
 
-class GeoJson implements Renderer
+class Geojson implements Renderer
 {
-    private $_type = 'Point';
+    private $_featureType = 'Point';
 
     public function render(array $features)
     {
-        if ($this->_type === 'Linestring') {
+        if ($this->_featureType === 'Linestring') {
             $lineString = new LineString($features);
             $feature = new Feature($lineString);
             $collection = array($feature);
@@ -50,8 +50,8 @@ class GeoJson implements Renderer
         return $jsonObject;
     }
 
-    public function setType($type)
+    public function setFeatureType($featureType)
     {
-        $this->_type = $type;
+        $this->_featureType = $featureType;
     }
 }

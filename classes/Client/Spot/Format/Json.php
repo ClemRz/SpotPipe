@@ -19,7 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Client\Spot\Type;
+namespace Client\Spot\Format;
 
 use Adapter\JsonAdapter;
 use Client\Spot\Fetcher\Fetcher;
@@ -31,47 +31,30 @@ class Json implements JsonAdapter
     private $_features = array();
     private $_lastMessagesCount;
     private $_feed;
-    private $_type = 'Point';
+    private $_featureType = 'Point';
     private $_password = '';
     private $_all = false;
 
-    public function setFeed($feed)
+    function __construct()
     {
-        $this->_feed = $feed;
-        return $this;
+        $this->_feed = $_GET['feed'];
+        if (empty($this->_feed)) {
+            throw new \Exception('Please specify feed parameter.');
+        }
+        $this->_password = $_GET['password'];
+        $this->_all = !empty($_GET['all']);
     }
 
-    public function setPassword($password)
+    public function setFeatureType($featureType)
     {
-
-        $this->_password = $password;
+        $this->_featureType = $featureType;
         return $this;
-    }
-
-    public function setAll($all)
-    {
-        $this->_all = $all;
-        return $this;
-    }
-
-    public function setType($type)
-    {
-        $this->_type = $type;
-        return $this;
-    }
-
-    public function getFeatures()
-    {
-        return $this->_features;
     }
 
     //TODO clement do some caching before fetching the entire feed
-    public function fetchFeatures()
+    public function getFeatures()
     {
-        if (empty($this->_feed)) {
-            throw new \Exception('No feed provided.');
-        }
-        $fetcher = FetcherFactory::getFetcher($this->_type);
+        $fetcher = FetcherFactory::getFetcher($this->_featureType);
         $start = 0;
         do {
             $jsonObject = $this->getJsonObject($start);
@@ -81,6 +64,7 @@ class Json implements JsonAdapter
             $this->_features = array_merge($this->_features, $features);
             $start += 50;
         } while ($this->_all && $this->hasMoreMessages());
+        return $this->_features;
     }
 
     private function fetchFeature(Fetcher $fetcher, array $message)

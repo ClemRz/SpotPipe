@@ -23,15 +23,8 @@ namespace Adapter;
 
 interface JsonAdapter
 {
-    public function setFeed($feed);
 
-    public function setPassword($password);
-
-    public function setAll($all);
-
-    public function setType($type);
-
-    public function fetchFeatures();
+    public function setFeatureType($type);
 
     public function getFeatures();
 

@@ -23,12 +23,12 @@ namespace Adapter;
 
 class AdapterFactory
 {
-    public static function getAdapter($client, $type)
+    public static function getAdapter($client, $format)
     {
-        $class = "\\Client\\{$client}\\Type\\{$type}";
+        $class = "\\Client\\{$client}\\Format\\{$format}";
         if (class_exists($class)) {
             return new $class();
         }
-        throw new \Exception("Unsupported client or type: {$client}, {$type}.");
+        throw new \Exception("Unsupported client or type: {$client}, {$format}.");
     }
 }

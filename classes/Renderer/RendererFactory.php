@@ -23,11 +23,11 @@ namespace Renderer;
 
 class RendererFactory
 {
-    public static function getRenderer($type) {
-        $class = "\\Renderer\\Type\\{$type}";
+    public static function getRenderer($format) {
+        $class = "\\Renderer\\Format\\{$format}";
         if(class_exists($class)) {
             return new $class();
         }
-        throw new \Exception("Unsupported type: {$type}.");
+        throw new \Exception("Unsupported type: {$format}.");
     }
 }

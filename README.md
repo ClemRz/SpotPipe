@@ -13,13 +13,18 @@ $ composer install
 ## API
 GET parameters:
 
+ - `client`: *required*, client name, can be one of [*spot*]
+ - `from`: *required*, source feed format, can be one of [*json*]
+ - `to`: *required*, target feed format, can be one of [*geojson*] 
+ - `feature`: *optional*, feature type, can be one of [*point*, *linestring*], default *point*
+ 
+When using client *spot*:
  - `feed`: *required*, feed id of a Shared Page (see [http://www.findmespot.com/en/index.php?cid=111](http://www.findmespot.com/en/index.php?cid=111))
  - `password`: *optional*, if the feed is private then omitting this parameter will return an error
- - `linestring`: *optional*, set to 1 in order to return a lineString instead of Points
- - `all`: *optional*, set tp 1 in order to return not only the last 50 messages but all of them
+ - `all`: *optional*, set to 1 in order to return not only the last 50 messages but all of them
  
  Example:
- http://your.domain.com/SpotPipe/index.php?feed=yourFeedKeyHere
+ http://your.domain.com/SpotPipe/index.php?client=spot&from=json&to=geojson&feature=linestring&feed=yourFeedKeyHere&password=feedsPassword
  
 ## Usage example in QGIS
 ![Example](res/screenshot1.png)

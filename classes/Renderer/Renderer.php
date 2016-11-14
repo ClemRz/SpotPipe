@@ -25,5 +25,5 @@ interface Renderer
 {
     public function render(array $features);
 
-    public function setType($type);
+    public function setFeatureType($featureFeatureType);
 }

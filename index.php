@@ -29,21 +29,29 @@ try {
         include "./classes/{$class}.php";
     });
 
-    $feed = $_GET['feed'];
-    $password = $_GET['password'];
-    $forLineString = !empty($_GET['linestring']);
-    $all = !empty($_GET['all']);
+    $client = ucfirst($_GET['client']);
+    if (empty($client)) {
+        throw new Exception('Please specify client parameter. Available: Spot.');
+    }
+    $sourceFormat = ucfirst($_GET['from']);
+    if (empty($sourceFormat)) {
+        throw new Exception('Please specify from parameter. Available: Json.');
+    }
+    $targetFormat = ucfirst($_GET['to']);
+    if (empty($targetFormat)) {
+        throw new Exception('Please specify to parameter. Available: Geojson.');
+    }
+    $featureType = ucfirst($_GET['feature']);
+    if (empty($featureType)) {
+        throw new Exception('Please specify feature parameter. Available: Point, Linestring.');
+    }
 
-    $adapter = AdapterFactory::getAdapter('Spot', 'Json');
-    $adapter->setFeed($feed)
-        ->setPassword($password)
-        ->setAll($all)
-        ->setType($forLineString ? 'Linestring' : 'Point')
-        ->fetchFeatures();
+    $adapter = AdapterFactory::getAdapter($client, $sourceFormat);
+    $adapter->setFeatureType($featureType);
     $features = $adapter->getFeatures();
 
-    $renderer = RendererFactory::getRenderer('GeoJson');
-    $renderer->setType($forLineString ? 'Linestring' : 'Point');
+    $renderer = RendererFactory::getRenderer($targetFormat);
+    $renderer->setFeatureType($featureType);
     $jsonObject = $renderer->render($features);
 
 } catch (Exception $e) {
