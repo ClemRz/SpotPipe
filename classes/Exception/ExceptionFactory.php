@@ -19,13 +19,15 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Exception;
 
-interface Renderer
+class ExceptionFactory
 {
-    public function render(array $features);
-
-    public function setFeatureType($featureFeatureType);
-
-    public function getHeader();
+    public static function getRenderer($format) {
+        $class = "\\Exception\\Format\\{$format}";
+        if(class_exists($class)) {
+            return new $class();
+        }
+        throw new \Exception("Unsupported type: {$format}.");
+    }
 }

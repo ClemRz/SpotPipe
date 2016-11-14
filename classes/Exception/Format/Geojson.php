@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,13 +18,22 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Exception\Format;
 
-interface Renderer
+use Exception\Exception;
+
+class Geojson implements Exception
 {
-    public function render(array $features);
 
-    public function setFeatureType($featureFeatureType);
+    public function render(\Exception $e)
+    {
+        $string = new \stdClass();
+        $string->error = $e->getMessage();
+        return json_encode($string);
+    }
 
-    public function getHeader();
+    public function getHeader()
+    {
+        return 'Content-Type: application/json; charset=utf-8';
+    }
 }

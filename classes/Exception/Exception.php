@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,13 +18,12 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer;
+namespace Exception;
 
-interface Renderer
+
+interface Exception
 {
-    public function render(array $features);
-
-    public function setFeatureType($featureFeatureType);
+    public function render(\Exception $e);
 
     public function getHeader();
 }

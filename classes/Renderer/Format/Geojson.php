@@ -34,11 +34,16 @@ class Geojson implements Renderer
         $collector = CollectorFactory::getCollector($this->_featureType);
         $collection = $collector->collect($features);
         $jsonObject = new FeatureCollection($collection);
-        return $jsonObject;
+        return json_encode($jsonObject);
     }
 
     public function setFeatureType($featureType)
     {
         $this->_featureType = $featureType;
+    }
+
+    public function getHeader()
+    {
+        return 'Content-Type: application/json; charset=utf-8';
     }
 }

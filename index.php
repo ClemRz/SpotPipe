@@ -18,9 +18,9 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \Adapter\AdapterFactory;
-use \Renderer\RendererFactory;
-
+use Adapter\AdapterFactory;
+use Renderer\RendererFactory;
+use Exception\ExceptionFactory;
 
 try {
     require __DIR__ . '/vendor/autoload.php';
@@ -52,14 +52,22 @@ try {
 
     $renderer = RendererFactory::getRenderer($targetFormat);
     $renderer->setFeatureType($featureType);
-    $jsonObject = $renderer->render($features);
+    $string = $renderer->render($features);
+    $header = $renderer->getHeader();
+
+    header($header);
+    echo($string);
 
 } catch (Exception $e) {
-    $jsonObject = new stdClass();
-    $jsonObject->error = $e->getMessage();
-} finally {
-    $json = json_encode($jsonObject);
-    header('Content-Type: application/json; charset=utf-8');
-    echo($json);
+    $targetFormat = ucfirst($_GET['to']);
+    if (empty($targetFormat)) {
+        $targetFormat = 'text';
+    }
+    $renderer = ExceptionFactory::getRenderer($targetFormat);
+    $string = $renderer->render($e);
+    $header = $renderer->getHeader();
+
+    header($header);
+    echo($string);
 }
 
