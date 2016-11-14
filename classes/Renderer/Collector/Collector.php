@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,26 +18,10 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Renderer\Format;
+namespace Renderer\Collector;
 
-use GeoJson\Feature\FeatureCollection;
-use Renderer\Collector\CollectorFactory;
-use Renderer\Renderer;
 
-class Geojson implements Renderer
+interface Collector
 {
-    private $_featureType = 'Point';
-
-    public function render(array $features)
-    {
-        $collector = CollectorFactory::getCollector($this->_featureType);
-        $collection = $collector->collect($features);
-        $jsonObject = new FeatureCollection($collection);
-        return $jsonObject;
-    }
-
-    public function setFeatureType($featureType)
-    {
-        $this->_featureType = $featureType;
-    }
+    public function collect($features);
 }
