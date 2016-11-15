@@ -38,19 +38,21 @@ class ParametersValidator
 
     public function validate()
     {
-        $map = Map::$CLIENT_SOURCE_FORMAT;
-        if (array_key_exists($this->_client, $map)) {
-            if (!in_array($this->_sourceFormat, $map[$this->_client])) {
+        $clientMap = Map::$CLIENT_SOURCE_FORMAT;
+        if (array_key_exists($this->_client, $clientMap)) {
+            if (!in_array($this->_sourceFormat, $clientMap[$this->_client])) {
                 throw new \Exception("Wrong value for from parameter: {$this->_sourceFormat}.");
             }
         } else {
             throw new \Exception("Wrong value for client parameter: {$this->_client}.");
         }
-        if (!in_array($this->_targetFormat, Map::$TARGET_FORMATS)) {
+        $targetMap = Map::$TARGET_FORMATS;
+        if (array_key_exists($this->_targetFormat, $targetMap)) {
+            if (!in_array($this->_featureType, $targetMap[$this->_targetFormat])) {
+                throw new \Exception("Wrong value for feature parameter: {$this->_featureType}.");
+            }
+        } else {
             throw new \Exception("Wrong value for to parameter: {$this->_targetFormat}.");
-        }
-        if (!in_array($this->_featureType, Map::$FEATURES)) {
-            throw new \Exception("Wrong value for feature parameter: {$this->_featureType}.");
         }
     }
 }

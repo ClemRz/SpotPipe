@@ -16,7 +16,7 @@ GET parameters:
  - `client`: *required*, client name, can be one of [*spot*]
  - `from`: *required*, source feed format, can be one of [*json*]
  - `to`: *required*, target feed format, can be one of [*geojson*, *kml*] 
- - `feature`: *optional*, feature type, can be one of [*point*, *linestring*], default *point*
+ - `feature`: *optional*, feature type, can be one of [*point*, *linestring*, *both*], default *point*. *both* is available only for *kml* target format.
  
 When using client *spot*:
 

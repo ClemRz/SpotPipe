@@ -1,4 +1,5 @@
 <?php
+
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -18,22 +19,11 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Validator;
+namespace Client\Spot\Fetcher\Feature;
 
-class Map
+use Client\Spot\Fetcher\Fetcher;
+use Client\Spot\Fetcher\Helper;
+
+class Both extends Point
 {
-    public static $CLIENT_SOURCE_FORMAT = array(
-        'Spot' => array('Json')
-    );
-    public static $TARGET_FORMATS = array(
-        'Geojson' => array(
-            'Point',
-            'Linestring'
-        ),
-        'Kml' => array(
-            'Point',
-            'Linestring',
-            'Both'
-        )
-    );
 }
