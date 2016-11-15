@@ -23,12 +23,12 @@ namespace Client\Spot\Fetcher;
 
 class Helper
 {
-    public static function getProperties($message, $index)
+    public static function getProperties($message)
     {
         return array(
             "clientUnixTime" => $message->clientUnixTime,
             "id" => $message->id,
-            "index" => $index,
+            "index" => null,
             "messengerId" => $message->messengerId,
             "messengerName" => $message->messengerName,
             "unixTime" => $message->unixTime,

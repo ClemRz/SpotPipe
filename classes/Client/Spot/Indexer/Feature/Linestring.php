@@ -1,5 +1,4 @@
 <?php
-
 /*
     Copyright (C) 2016 Clément Ronzon
 
@@ -19,22 +18,15 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Client\Spot\Fetcher\Feature;
+namespace Client\Spot\Indexer\Feature;
 
-use Client\Spot\Fetcher\Fetcher;
-use Client\Spot\Fetcher\Helper;
+use Client\Spot\Indexer\Indexer;
 
-class Point implements Fetcher
+class Linestring implements Indexer
 {
-    public function fetchFeature(array $messages)
+
+    public function index(array &$features)
     {
-        $points = array();
-        foreach ($messages as $message) {
-            $point = Helper::getPoint($message);
-            $properties = Helper::getProperties($message);
-            $id = $message->id;
-            array_push($points, array($point, $properties, $id));
-        }
-        return $points;
+        //do nothing
     }
 }

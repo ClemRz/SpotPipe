@@ -22,8 +22,8 @@
 namespace Client\Spot\Format;
 
 use Adapter\Format;
-use Client\Spot\Fetcher\Fetcher;
 use Client\Spot\Fetcher\FetcherFactory;
+use Client\Spot\Indexer\IndexerFactory;
 use Client\Spot\Spot;
 
 class Json implements Format\Json
@@ -63,21 +63,19 @@ class Json implements Format\Json
             $this->_lastMessagesCount = $feedMessageResponse->count;
             $this->_name = $feedMessageResponse->feed->name;
             $messages = $this->getMessages($jsonObject);
-            $features = $this->fetchFeature($fetcher, $messages);
+            $features = $fetcher->fetchFeature($messages);
             $this->_features = array_merge($this->_features, $features);
             $start += 50;
         } while ($this->_all && $this->hasMoreMessages());
+        $this->_features = array_reverse($this->_features);
+        $indexer = IndexerFactory::getIndexer($this->_featureType);
+        $indexer->index($this->_features);
         return $this->_features;
     }
 
     public function getFileName()
     {
         return "{$this->_name} - {$this->_featureType}";
-    }
-
-    private function fetchFeature(Fetcher $fetcher, array $message)
-    {
-        return $fetcher->fetchFeature($message);
     }
 
     private function getUrl($start, $latest = false)
