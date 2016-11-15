@@ -31,7 +31,7 @@ class Both implements Kml
         $pointCollector = new Point();
         $pointCollector->setDom($this->_dom);
         $pointCollector->setDocumentNode($this->_documentNode);
-        $linestringCollector = new LineString();
+        $linestringCollector = new Linestring();
         $linestringCollector->setDom($this->_dom);
         $linestringCollector->setDocumentNode($this->_documentNode);
         $linestringCollector->collect($linestring);

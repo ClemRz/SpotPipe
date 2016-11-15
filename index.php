@@ -70,8 +70,10 @@ try {
 } catch (Exception $e) {
 
     $targetFormat = ucfirst($_GET['to']);
-    if (empty($targetFormat) || !in_array($targetFormat, Map::$TARGET_FORMATS)) {
-        $targetFormat = 'text';
+    $targetFormats = array();
+    array_walk_recursive(Map::$TARGET_FORMATS, function($a) use (&$targetFormats) { $targetFormats[] = $a; });
+    if (empty($targetFormat) || !in_array($targetFormat, $targetFormats)) {
+        $targetFormat = 'Text';
     }
     $renderer = ExceptionFactory::getRenderer($targetFormat);
     $string = $renderer->render($e);
