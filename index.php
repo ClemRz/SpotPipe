@@ -19,8 +19,10 @@
  */
 
 use Adapter\AdapterFactory;
-use Renderer\RendererFactory;
 use Exception\ExceptionFactory;
+use Renderer\RendererFactory;
+use Validator\Map;
+use Validator\ParametersValidator;
 
 try {
 
@@ -47,6 +49,9 @@ try {
         throw new Exception('Please specify feature parameter. Available: Point, Linestring.');
     }
 
+    $validator = new ParametersValidator($client, $sourceFormat, $targetFormat, $featureType);
+    $validator->validate();
+
     $adapter = AdapterFactory::getAdapter($client, $sourceFormat);
     $adapter->setFeatureType($featureType);
     $features = $adapter->getFeatures();
@@ -65,7 +70,7 @@ try {
 } catch (Exception $e) {
 
     $targetFormat = ucfirst($_GET['to']);
-    if (empty($targetFormat)) {
+    if (empty($targetFormat) || !in_array($targetFormat, Map::$TARGET_FORMATS)) {
         $targetFormat = 'text';
     }
     $renderer = ExceptionFactory::getRenderer($targetFormat);
