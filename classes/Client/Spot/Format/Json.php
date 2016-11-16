@@ -28,7 +28,6 @@ use Client\Spot\Spot;
 
 class Json implements Adapter
 {
-    private $_features = array();
     private $_lastMessagesCount;
     private $_feed;
     private $_featureType = 'Point';
@@ -56,6 +55,7 @@ class Json implements Adapter
     public function getFeatures()
     {
         $fetcher = FetcherFactory::getFetcher($this->_featureType);
+        $allFeatures = array();
         $start = 0;
         do {
             $jsonObject = $this->getJsonObject($start);
@@ -64,13 +64,13 @@ class Json implements Adapter
             $this->_name = $feedMessageResponse->feed->name;
             $messages = $this->getMessages($jsonObject);
             $features = $fetcher->fetchFeature($messages);
-            $this->_features = array_merge($this->_features, $features);
+            $allFeatures = array_merge($allFeatures, $features);
             $start += 50;
         } while ($this->_all && $this->hasMoreMessages());
-        $this->_features = array_reverse($this->_features);
+        $allFeatures = array_reverse($allFeatures);
         $indexer = IndexerFactory::getIndexer($this->_featureType);
-        $indexer->index($this->_features);
-        return $this->_features;
+        $indexer->index($allFeatures);
+        return $allFeatures;
     }
 
     public function getFileName()
