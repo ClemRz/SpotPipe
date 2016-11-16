@@ -21,12 +21,12 @@
 
 namespace Client\Spot\Format;
 
-use Adapter\Format;
+use Adapter\Adapter;
 use Client\Spot\Fetcher\FetcherFactory;
 use Client\Spot\Indexer\IndexerFactory;
 use Client\Spot\Spot;
 
-class Json implements Format\Json
+class Json implements Adapter
 {
     private $_features = array();
     private $_lastMessagesCount;

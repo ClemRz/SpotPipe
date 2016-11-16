@@ -26,4 +26,8 @@ interface Adapter
 
     public function getFileName();
 
+    public function getFeatures();
+
+    public function setFeatureType($type);
+
 }
