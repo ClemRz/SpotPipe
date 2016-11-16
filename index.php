@@ -19,6 +19,7 @@
  */
 
 use Adapter\AdapterFactory;
+use Cache\CacheManager;
 use Exception\ExceptionFactory;
 use Renderer\RendererFactory;
 use Validator\Map;
@@ -54,7 +55,12 @@ try {
 
     $adapter = AdapterFactory::getAdapter($client, $sourceFormat);
     $adapter->setFeatureType($featureType);
-    $features = $adapter->getFeatures();
+    $cacheId = $adapter->getCacheId();
+
+    $cacheManager = new CacheManager();
+    $cacheManager->setCacheName($client, $featureType, $cacheId);
+    $features = $cacheManager->getFeatures($adapter);
+
     $fileName = $adapter->getFileName();
 
     $renderer = RendererFactory::getRenderer($targetFormat);
@@ -71,7 +77,9 @@ try {
 
     $targetFormat = ucfirst($_GET['to']);
     $targetFormats = array();
-    array_walk_recursive(Map::$TARGET_FORMATS, function($a) use (&$targetFormats) { $targetFormats[] = $a; });
+    array_walk_recursive(Map::$TARGET_FORMATS, function ($a) use (&$targetFormats) {
+        $targetFormats[] = $a;
+    });
     if (empty($targetFormat) || !in_array($targetFormat, $targetFormats)) {
         $targetFormat = 'Text';
     }

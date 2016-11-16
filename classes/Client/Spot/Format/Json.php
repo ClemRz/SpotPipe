@@ -33,7 +33,6 @@ class Json implements Adapter
     private $_featureType = 'Point';
     private $_password = '';
     private $_all = false;
-    private $_name;
 
     function __construct()
     {
@@ -51,7 +50,6 @@ class Json implements Adapter
         return $this;
     }
 
-    //TODO clement do some caching before fetching the entire feed
     public function getFeatures()
     {
         $fetcher = FetcherFactory::getFetcher($this->_featureType);
@@ -61,7 +59,6 @@ class Json implements Adapter
             $jsonObject = $this->getJsonObject($start);
             $feedMessageResponse = $jsonObject->response->feedMessageResponse;
             $this->_lastMessagesCount = $feedMessageResponse->count;
-            $this->_name = $feedMessageResponse->feed->name;
             $messages = $this->getMessages($jsonObject);
             $features = $fetcher->fetchFeature($messages);
             $allFeatures = array_merge($allFeatures, $features);
@@ -75,7 +72,30 @@ class Json implements Adapter
 
     public function getFileName()
     {
-        return "{$this->_name} - {$this->_featureType}";
+        return "{$this->_feed} - {$this->_featureType}";
+    }
+
+    public function getCacheId()
+    {
+        if ($this->_featureType === 'Linestring') {
+            return null;
+        }
+        return "{$this->_feed}_{$this->_all}";
+    }
+
+    public function isUpToDate($lastCachedFeature)
+    {
+        $lastOnlineFeature = $this->getLastFeature();
+        return $lastOnlineFeature[1]['unixTime'] <= $lastCachedFeature[1]['unixTime'];
+    }
+
+    private function getLastFeature()
+    {
+        $fetcher = FetcherFactory::getFetcher($this->_featureType);
+        $jsonObject = $this->getJsonObject(0, true);
+        $messages = $this->getMessages($jsonObject);
+        $feature = $fetcher->fetchFeature(array($messages));
+        return $feature[0];
     }
 
     private function getUrl($start, $latest = false)
