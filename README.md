@@ -37,5 +37,4 @@ How to integrate a live feed in QGIS: [http://www.fulcrumapp.com/blog/live-data-
 
 ## Todo
                           
-  * Local caching of feed and check against feed's last message date
   * Continuous Integration
