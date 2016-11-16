@@ -24,6 +24,8 @@ use Renderer\Collector\Collector;
 
 interface Kml extends Collector
 {
+    public function applyStyleNode();
+
     public function setDom($dom);
 
     public function setDocumentNode($docNode);

@@ -30,37 +30,18 @@ class Kml implements Renderer
 
     public function render(array $features)
     {
-
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $node = $dom->createElementNS('http://earth.google.com/kml/2.1', 'kml');
         $parNode = $dom->appendChild($node);
         $document = $dom->createElement('Document');
         $docNode = $parNode->appendChild($document);
 
-        $markerStyleNode = $dom->createElement('Style');
-        $markerStyleNode->setAttribute('id', 'markerStyle');
-        $markerIconStyleNode = $dom->createElement('IconStyle');
-        $markerIconNode = $dom->createElement('Icon');
-        $markerHref = $dom->createElement('href', 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
-        $markerIconNode->appendChild($markerHref);
-        $markerIconStyleNode->appendChild($markerIconNode);
-        $markerStyleNode->appendChild($markerIconStyleNode);
-        $docNode->appendChild($markerStyleNode);
-
-        $lineStyleNode = $dom->createElement('Style');
-        $lineStyleNode->setAttribute('id', 'lineStyle');
-        $lineLineStyleNode = $dom->createElement('LineStyle');
-        $lineColor = $dom->createElement('color', 'ff0000ff');
-        $lineWidth = $dom->createElement('width', '2');
-        $lineLineStyleNode->appendChild($lineColor);
-        $lineLineStyleNode->appendChild($lineWidth);
-        $lineStyleNode->appendChild($lineLineStyleNode);
-        $docNode->appendChild($lineStyleNode);
-
         $collector = CollectorFactory::getCollector('Kml', $this->_featureType);
-        $collector->setDom($dom);
-        $collector->setDocumentNode($docNode);
-        $collector->collect($features);
+        $collector->setDom($dom)
+            ->setDocumentNode($docNode)
+            ->applyStyleNode()
+            ->collect($features);
+
         return $dom->saveXML();
     }
 

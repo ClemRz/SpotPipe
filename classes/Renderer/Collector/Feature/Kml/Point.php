@@ -27,7 +27,7 @@ class Point implements Kml
 
     public function collect($features)
     {
-        foreach ($features as $point) {
+        foreach ($features as $point) {    //TODO clement change the style according to the type of message
             $node = $this->_dom->createElement('Placemark');
             $placeNode = $this->_documentNode->appendChild($node);
             $placeNode->setAttribute('id', 'placemark' . $point[2]);
@@ -46,16 +46,32 @@ class Point implements Kml
             $pointNode->appendChild($coordinatesNode);
             $placeNode->appendChild($pointNode);
         }
+        return $this;
+    }
+
+    public function applyStyleNode() {
+        $styleNode = $this->_dom->createElement('Style');
+        $styleNode->setAttribute('id', 'markerStyle');
+        $markerIconStyleNode = $this->_dom->createElement('IconStyle');
+        $markerIconNode = $this->_dom->createElement('Icon');
+        $markerHref = $this->_dom->createElement('href', 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
+        $markerIconNode->appendChild($markerHref);
+        $markerIconStyleNode->appendChild($markerIconNode);
+        $styleNode->appendChild($markerIconStyleNode);
+        $this->_documentNode->appendChild($styleNode);
+        return $this;
     }
 
     public function setDom($dom)
     {
         $this->_dom = $dom;
+        return $this;
     }
 
     public function setDocumentNode($docNode)
     {
         $this->_documentNode = $docNode;
+        return $this;
     }
 
     private function getXmlFormattedDateString($point)

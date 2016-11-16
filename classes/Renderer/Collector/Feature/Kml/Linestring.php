@@ -41,15 +41,32 @@ class Linestring implements Kml
         }, $features)));
         $linestringNode->appendChild($coordinatesNode);
         $placeNode->appendChild($linestringNode);
+        return $this;
+    }
+
+    public function applyStyleNode()
+    {
+        $styleNode = $this->_dom->createElement('Style');
+        $styleNode->setAttribute('id', 'lineStyle');
+        $lineLineStyleNode = $this->_dom->createElement('LineStyle');
+        $lineColor = $this->_dom->createElement('color', 'ff0000ff');
+        $lineWidth = $this->_dom->createElement('width', '2');
+        $lineLineStyleNode->appendChild($lineColor);
+        $lineLineStyleNode->appendChild($lineWidth);
+        $styleNode->appendChild($lineLineStyleNode);
+        $this->_documentNode->appendChild($styleNode);
+        return $this;
     }
 
     public function setDom($dom)
     {
         $this->_dom = $dom;
+        return $this;
     }
 
     public function setDocumentNode($docNode)
     {
         $this->_documentNode = $docNode;
+        return $this;
     }
 }

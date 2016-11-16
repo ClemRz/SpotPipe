@@ -22,30 +22,42 @@ namespace Renderer\Collector\Feature\Kml;
 
 class Both implements Kml
 {
-    private $_dom;
-    private $_documentNode;
+    private $_pointCollector;
+    private $_linestringCollector;
+
+    public function __construct()
+    {
+        $this->_pointCollector = new Point();
+        $this->_linestringCollector = new Linestring();
+    }
 
     public function collect($features)
     {
         $linestring = $this->getLineString($features);
-        $pointCollector = new Point();
-        $pointCollector->setDom($this->_dom);
-        $pointCollector->setDocumentNode($this->_documentNode);
-        $linestringCollector = new Linestring();
-        $linestringCollector->setDom($this->_dom);
-        $linestringCollector->setDocumentNode($this->_documentNode);
-        $linestringCollector->collect($linestring);
-        $pointCollector->collect($features);
+        $this->_linestringCollector->collect($linestring);
+        $this->_pointCollector->collect($features);
+        return $this;
+    }
+
+    public function applyStyleNode()
+    {
+        $this->_linestringCollector->applyStyleNode();
+        $this->_pointCollector->applyStyleNode();
+        return $this;
     }
 
     public function setDom($dom)
     {
-        $this->_dom = $dom;
+        $this->_pointCollector->setDom($dom);
+        $this->_linestringCollector->setDom($dom);
+        return $this;
     }
 
     public function setDocumentNode($docNode)
     {
-        $this->_documentNode = $docNode;
+        $this->_pointCollector->setDocumentNode($docNode);
+        $this->_linestringCollector->setDocumentNode($docNode);
+        return $this;
     }
 
     private function getLineString($features) {
