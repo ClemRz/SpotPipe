@@ -20,6 +20,8 @@
 
 namespace Renderer\Collector\Feature\Kml;
 
+use Client\Spot\Spot;
+
 class Point implements Kml
 {
     private $_dom;
@@ -35,7 +37,7 @@ class Point implements Kml
             $placeNode->appendChild($nameNode);
             $descNode = $this->_dom->createElement('description', urldecode(http_build_query($point[1], '', '<br>')));
             $placeNode->appendChild($descNode);
-            $styleUrl = $this->_dom->createElement('styleUrl', '#markerStyle');
+            $styleUrl = $this->_dom->createElement('styleUrl', "#{$point[1]['messageType']}MarkerStyle");
             $placeNode->appendChild($styleUrl);
             $tsNode = $this->_dom->createElement('TimeStamp');
             $whenNode = $this->_dom->createElement('when', $this->getXmlFormattedDateString($point));
@@ -49,16 +51,19 @@ class Point implements Kml
         return $this;
     }
 
-    public function applyStyleNode() {
-        $styleNode = $this->_dom->createElement('Style');
-        $styleNode->setAttribute('id', 'markerStyle');
-        $markerIconStyleNode = $this->_dom->createElement('IconStyle');
-        $markerIconNode = $this->_dom->createElement('Icon');
-        $markerHref = $this->_dom->createElement('href', 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
-        $markerIconNode->appendChild($markerHref);
-        $markerIconStyleNode->appendChild($markerIconNode);
-        $styleNode->appendChild($markerIconStyleNode);
-        $this->_documentNode->appendChild($styleNode);
+    public function applyStyleNode()
+    {
+        foreach (Spot::$MESSAGE_TYPES as $messageType) {
+            $styleNode = $this->_dom->createElement('Style');
+            $styleNode->setAttribute('id', "{$messageType}MarkerStyle");
+            $markerIconStyleNode = $this->_dom->createElement('IconStyle');
+            $markerIconNode = $this->_dom->createElement('Icon');
+            $markerHref = $this->_dom->createElement('href', $this->getIconHref($messageType));
+            $markerIconNode->appendChild($markerHref);
+            $markerIconStyleNode->appendChild($markerIconNode);
+            $styleNode->appendChild($markerIconStyleNode);
+            $this->_documentNode->appendChild($styleNode);
+        }
         return $this;
     }
 
@@ -77,5 +82,33 @@ class Point implements Kml
     private function getXmlFormattedDateString($point)
     {
         return preg_replace('/\+([\d]{2})([\d]{2})/', '+$1:$2', $point[1]['dateTime']);
+    }
+
+    private function getIconHref($messageType)
+    {
+        switch ($messageType) {
+            case 'OK':
+                return 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png';
+            case 'TRACK':
+                return 'http://maps.google.com/mapfiles/kml/shapes/hiker.png';
+            case 'EXTREME-TRACK':
+                return 'http://maps.google.com/mapfiles/kml/shapes/hiker.png';
+            case 'UNLIMITED-TRACK':
+                return 'http://maps.google.com/mapfiles/kml/shapes/hiker.png';
+            case 'NEWMOVEMENT':
+                return 'http://maps.google.com/mapfiles/kml/shapes/arrow-reverse.png';
+            case 'HELP':
+                return 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
+            case 'HELP-CANCEL':
+                return 'http://maps.google.com/mapfiles/kml/shapes/info.png';
+            case 'CUSTOM':
+                return 'http://maps.google.com/mapfiles/kml/shapes/post_office.png';
+            case 'POI':
+                return 'http://maps.google.com/mapfiles/kml/shapes/arrow.png';
+            case 'STOP':
+                return 'http://maps.google.com/mapfiles/kml/shapes/polygon.png';
+            default:
+                return 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
+        }
     }
 }

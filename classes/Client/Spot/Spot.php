@@ -28,4 +28,17 @@ class Spot
     const MESSAGE_ENDPOINT = 'message.json';
     const PASSWORD_PARAMETER = 'feedPassword';
     const START_PARAMETER = 'start';
+
+    public static $MESSAGE_TYPES = array(
+        'OK',
+        'TRACK',
+        'EXTREME-TRACK',
+        'UNLIMITED-TRACK',
+        'NEWMOVEMENT',
+        'HELP',
+        'HELP-CANCEL',
+        'CUSTOM',
+        'POI',
+        'STOP'
+    );
 }
