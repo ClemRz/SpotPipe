@@ -29,13 +29,13 @@ class Point implements Kml
 
     public function collect($features)
     {
-        foreach ($features as $point) {    //TODO clement change the style according to the type of message
+        foreach ($features as $point) {
             $node = $this->_dom->createElement('Placemark');
             $placeNode = $this->_documentNode->appendChild($node);
             $placeNode->setAttribute('id', 'placemark' . $point[2]);
-            $nameNode = $this->_dom->createElement('name', htmlentities($point[1]['index']));
+            $nameNode = $this->_dom->createElement('name', $point[1]['index']);
             $placeNode->appendChild($nameNode);
-            $descNode = $this->_dom->createElement('description', urldecode(http_build_query($point[1], '', '<br>')));
+            $descNode = $this->_dom->createElement('description', $this->getDescription($point));
             $placeNode->appendChild($descNode);
             $styleUrl = $this->_dom->createElement('styleUrl', "#{$point[1]['messageType']}MarkerStyle");
             $placeNode->appendChild($styleUrl);
@@ -110,5 +110,16 @@ class Point implements Kml
             default:
                 return 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
         }
+    }
+
+    private function getDescription($point)
+    {
+        $properties = $point[1];
+        $string = urldecode(http_build_query($properties, '', '<br>'));
+        if (array_key_exists('messageContent', $properties)) {
+            $messageContent = urldecode($properties['messageContent']);
+            $string = "<h3>{$messageContent}</h3><p>{$string}</p>";
+        }
+        return $string;
     }
 }
