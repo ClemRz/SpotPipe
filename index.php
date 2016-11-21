@@ -71,6 +71,9 @@ try {
 
     header($header);
     header("Content-Disposition: filename=\"{$fileName}.{$fileExtension}\"");
+    header("Cache-Control: no-cache, no-store, must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: 0");
     echo($string);
 
 } catch (Exception $e) {
