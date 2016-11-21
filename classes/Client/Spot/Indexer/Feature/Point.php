@@ -24,7 +24,7 @@ use Client\Spot\Indexer\Indexer;
 
 class Point implements Indexer
 {
-    private $_index = 0;
+    private $_index = 1;
 
     public function index(array &$features)
     {
