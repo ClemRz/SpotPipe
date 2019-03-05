@@ -28,6 +28,7 @@ class Spot
     const MESSAGE_ENDPOINT = 'message.json';
     const PASSWORD_PARAMETER = 'feedPassword';
     const START_PARAMETER = 'start';
+    const MAX_MESSAGES_PER_RESPONSE = 51;
 
     public static $MESSAGE_TYPES = array(
         'OK',

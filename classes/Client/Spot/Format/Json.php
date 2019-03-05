@@ -113,7 +113,7 @@ class Json implements Adapter
 
     private function hasMoreMessages()
     {
-        return $this->_lastMessagesCount === 50;
+        return $this->_lastMessagesCount === Spot::MAX_MESSAGES_PER_RESPONSE;
     }
 
     private function getMessages($jsonObject)
